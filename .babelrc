@@ -1,0 +1,21 @@
+{
+  "presets": [
+    ["env", {
+      "targets": {
+        "node": "current"
+      }
+    }
+  ], "stage-0"],
+  "sourceMaps": "both",
+  "plugins": ["transform-runtime"],
+  "env": {
+    "test": {
+      "plugins": [
+        ["istanbul"]
+      ]
+    },
+    "production": {
+      "plugins": ["source-map-support"]
+    }
+  }
+}
