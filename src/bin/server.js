@@ -1,15 +1,28 @@
-import createServer from '../lib/createServer'
-import env from '../lib/env'
-import logger from '../lib/logger'
+const Koa = require('koa');
+const app = new Koa();
 
-const PORT = env.PORT || 1338
+// x-response-time
 
-createServer().then(app => {
-  app.listen(PORT, () => {
-    const mode = env.NODE_ENV
-    logger.debug(`Server listening on ${PORT} in ${mode} mode`)
-  })
-}, err => {
-  logger.error('Error while starting up server', err)
-  process.exit(1)
-})
+app.use(async function (ctx, next) {
+  const start = new Date();
+  await next();
+  const ms = new Date() - start;
+  ctx.set('X-Response-Time', `${ms}ms`);
+});
+
+// logger
+
+app.use(async function (ctx, next) {
+  const start = new Date();
+  await next();
+  const ms = new Date() - start;
+  console.log(`${ctx.method} ${ctx.url} - ${ms}`);
+});
+
+// response
+
+app.use(ctx => {
+  ctx.body = 'Hello World';
+});
+
+app.listen(3000);
